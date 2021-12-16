@@ -58,7 +58,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {},
+            onTap: () => Navigator.of(context).pushNamed(
+                '/Country/DocumentScanning/PersonalInfo/VideoRecordingInstructions'),
             child: Icon(Icons.arrow_forward_ios),
           ),
         ],
