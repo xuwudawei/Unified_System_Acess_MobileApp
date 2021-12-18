@@ -34,7 +34,9 @@ class _PageControllerState extends State<PageController> {
         actions: [
           IconButton(
             icon: Icon(Icons.exit_to_app),
-            onPressed: () {},
+            onPressed: () {
+              print("hi");
+            },
           ),
         ],
       ),
