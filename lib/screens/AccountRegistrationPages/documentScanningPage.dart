@@ -106,6 +106,22 @@ class _DocumentScanningPageState extends State<DocumentScanningPage> {
         actions: [
           GestureDetector(
             child: Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              if (_selectedFile != null) {
+                Navigator.pushNamed(
+                    context, '/Country/DocumentScanning/PersonalInfo');
+              } else {
+                _scaffold.currentState!.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Please capture your government issued ID!",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
           ),
         ],
       ),
@@ -188,7 +204,7 @@ class _DocumentScanningPageState extends State<DocumentScanningPage> {
                 MaterialButton(
                   color: Colors.green,
                   child: Text(
-                    "Take a picture",
+                    (_selectedFile == null) ? "Take a picture" : "Retake",
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
