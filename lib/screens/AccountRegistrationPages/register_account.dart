@@ -45,99 +45,102 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
           FocusScope.of(context).unfocus();
         },
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                width: MediaQuery.of(context).size.width,
-                child: Text(
-                  "Country of Residence",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "Country of Residence",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
-              SelectState(
-                style: TextStyle(color: Colors.grey, fontSize: 23),
-                onCountryChanged: (value) {
-                  setState(() {
-                    countryValue = value;
-                  });
-                },
-                onStateChanged: (value) {
-                  setState(() {
-                    stateValue = value;
-                  });
-                },
-                onCityChanged: (value) {
-                  setState(() {
-                    cityValue = value;
-                  });
-                },
-              ),
-              TextField(
-                style: TextStyle(color: Colors.white, fontSize: 23),
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                  labelText: 'Zip code',
-                  labelStyle: TextStyle(color: Colors.grey),
-                  hintText: 'Zip Code',
-                  suffixText: 'Required',
-                  hintStyle: TextStyle(color: Colors.white),
+                SelectState(
+                  style: TextStyle(color: Colors.grey, fontSize: 23),
+                  onCountryChanged: (value) {
+                    setState(() {
+                      countryValue = value;
+                    });
+                  },
+                  onStateChanged: (value) {
+                    setState(() {
+                      stateValue = value;
+                    });
+                  },
+                  onCityChanged: (value) {
+                    setState(() {
+                      cityValue = value;
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  zipCode = value;
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.white, fontSize: 23),
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.grey),
+                TextField(
+                  style: TextStyle(color: Colors.white, fontSize: 23),
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                    isDense: true,
+                    border: OutlineInputBorder(),
+                    labelText: 'Zip code',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    hintText: 'Zip Code',
+                    suffixText: 'Required',
+                    hintStyle: TextStyle(color: Colors.white),
                   ),
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                  labelText: 'Street Address',
-                  labelStyle: TextStyle(color: Colors.grey),
-                  hintText: 'Street Address',
-                  suffixText: 'Required',
-                  hintStyle: TextStyle(color: Colors.white),
+                  onChanged: (value) {
+                    zipCode = value;
+                  },
                 ),
-                onChanged: (value) {
-                  streetAddress = value;
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.white, fontSize: 23),
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.grey),
+                SizedBox(
+                  height: 20,
+                ),
+                TextField(
+                  style: TextStyle(color: Colors.white, fontSize: 23),
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                    isDense: true,
+                    border: OutlineInputBorder(),
+                    labelText: 'Street Address',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    hintText: 'Street Address',
+                    suffixText: 'Required',
+                    hintStyle: TextStyle(color: Colors.white),
                   ),
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                  labelText: 'Apartment/Suite',
-                  labelStyle: TextStyle(color: Colors.grey),
-                  hintText: 'Apartment/Suite',
-                  suffixText: 'Required',
-                  hintStyle: TextStyle(color: Colors.white),
+                  onChanged: (value) {
+                    streetAddress = value;
+                  },
                 ),
-                onChanged: (value) {
-                  apartment = value;
-                },
-              ),
-            ],
+                SizedBox(
+                  height: 20,
+                ),
+                TextField(
+                  style: TextStyle(color: Colors.white, fontSize: 23),
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                    isDense: true,
+                    border: OutlineInputBorder(),
+                    labelText: 'Apartment/Suite',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    hintText: 'Apartment/Suite',
+                    suffixText: 'Required',
+                    hintStyle: TextStyle(color: Colors.white),
+                  ),
+                  onChanged: (value) {
+                    apartment = value;
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
