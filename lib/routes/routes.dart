@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/documentScanningPage.dart';
+import 'package:usa_app/screens/AccountRegistrationPages/personalInfoPage.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/register_account.dart';
 import 'package:usa_app/screens/initialScreens/landing_page.dart';
 import 'package:usa_app/screens/initialScreens/loading_screens.dart';
@@ -41,6 +42,10 @@ class RouteGenerator {
       case '/Country/DocumentScanning':
         return MaterialPageRoute(
           builder: (_) => DocumentScanningPage(),
+        );
+      case '/Country/DocumentScanning/PersonalInfo':
+        return MaterialPageRoute(
+          builder: (_) => PersonalInformationPage(),
         );
     }
   }
