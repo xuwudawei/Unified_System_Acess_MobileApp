@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/documentScanningPage.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/personalInfoPage.dart';
+import 'package:usa_app/screens/AccountRegistrationPages/recordVideoPage.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/register_account.dart';
+import 'package:usa_app/screens/AccountRegistrationPages/videoInstructionsPage.dart';
 import 'package:usa_app/screens/initialScreens/landing_page.dart';
 import 'package:usa_app/screens/initialScreens/loading_screens.dart';
 import 'package:usa_app/screens/initialScreens/splash_screen.dart';
@@ -46,6 +48,14 @@ class RouteGenerator {
       case '/Country/DocumentScanning/PersonalInfo':
         return MaterialPageRoute(
           builder: (_) => PersonalInformationPage(),
+        );
+      case '/Country/DocumentScanning/PersonalInfo/VideoRecordingInstructions':
+        return MaterialPageRoute(
+          builder: (_) => VideoInstructionsPage(),
+        );
+      case '/VideoRecordingInstructions/RecordVideo':
+        return MaterialPageRoute(
+          builder: (_) => RecordVideoPage(),
         );
     }
   }
