@@ -28,7 +28,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     'Select your gender',
     'Male',
     'Female',
-    'Transgender'
+    'Others',
   ];
   String _selectedGender = "";
   String dropdownvalue = 'Select your gender';
