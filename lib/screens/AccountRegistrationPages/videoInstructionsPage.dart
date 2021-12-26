@@ -69,8 +69,7 @@ class _VideoInstructionsPageState extends State<VideoInstructionsPage> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(
-                      context, '/VideoRecordingInstructions/RecordVideo');
+                  Navigator.pushNamed(context, '/home/Main');
                 },
               ),
             ],
