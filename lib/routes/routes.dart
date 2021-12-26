@@ -5,6 +5,7 @@ import 'package:usa_app/screens/AccountRegistrationPages/personalInfoPage.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/recordVideoPage.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/register_account.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/videoInstructionsPage.dart';
+import 'package:usa_app/screens/home/main.dart';
 import 'package:usa_app/screens/initialScreens/landing_page.dart';
 import 'package:usa_app/screens/initialScreens/loading_screens.dart';
 import 'package:usa_app/screens/initialScreens/splash_screen.dart';
@@ -25,9 +26,10 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => LoadingScreen(),
         );
+      //change below to back to LandingPage
       case '/landingPage':
         return MaterialPageRoute(
-          builder: (_) => LandingPage(),
+          builder: (_) => MainPage(),
         );
       case '/landingPage/VerifyNumber':
         return MaterialPageRoute(
@@ -53,9 +55,9 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => VideoInstructionsPage(),
         );
-      case '/VideoRecordingInstructions/RecordVideo':
+      case '/home/Main':
         return MaterialPageRoute(
-          builder: (_) => RecordVideoPage(),
+          builder: (_) => MainPage(),
         );
     }
   }
