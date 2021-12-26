@@ -28,7 +28,6 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Container(
-        padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -50,96 +49,100 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 10,
             ),
-            Expanded(
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        width: 200,
-                        height: 200,
-                        margin: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width / 2.4),
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.pink.shade700,
-                                Colors.orange.shade500
-                              ],
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                            ),
-                            borderRadius: BorderRadius.circular(100)),
-                      ),
-                      Container(
-                        width: 100,
-                        height: 100,
-                        margin: EdgeInsets.only(right: 270),
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.pink.shade700,
-                                Colors.orange.shade500
-                              ],
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                            ),
-                            borderRadius: BorderRadius.circular(100)),
-                      ),
-                      Container(
-                        width: 200,
-                        height: 200,
-                        margin: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width / 2.4),
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.pink.shade700,
-                                Colors.orange.shade500
-                              ],
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                            ),
-                            borderRadius: BorderRadius.circular(100)),
-                      ),
-                      Container(
-                        width: 100,
-                        height: 100,
-                        margin: EdgeInsets.only(right: 270),
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.pink.shade700,
-                                Colors.orange.shade500
-                              ],
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                            ),
-                            borderRadius: BorderRadius.circular(100)),
-                      ),
-                    ],
-                  ),
-                  ListView.builder(
-                    itemCount: productListProv.getAllProducts.length,
-                    shrinkWrap: true,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        child: ProductTile(
-                          productName:
-                              productListProv.getAllProducts[index].productName,
-                          productImage: productListProv
-                              .getAllProducts[index].productImage,
-                          date: productListProv.getAllProducts[index].date,
-                          productDescription: productListProv
-                              .getAllProducts[index].productDescription,
-                          acccountStatus: productListProv
-                              .getAllProducts[index].accountStatus,
+            Container(
+              child: Expanded(
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          width: 200,
+                          height: 200,
+                          margin: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width / 2.4),
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.pink.shade700,
+                                  Colors.orange.shade500
+                                ],
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                              ),
+                              borderRadius: BorderRadius.circular(100)),
                         ),
-                      );
-                    },
-                  ),
-                ],
+                        Container(
+                          width: 100,
+                          height: 100,
+                          margin: EdgeInsets.only(
+                              right: MediaQuery.of(context).size.width / 2.4),
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.pink.shade700,
+                                  Colors.orange.shade500
+                                ],
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                              ),
+                              borderRadius: BorderRadius.circular(100)),
+                        ),
+                        Container(
+                          width: 200,
+                          height: 200,
+                          margin: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width / 2.4),
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.pink.shade700,
+                                  Colors.orange.shade500
+                                ],
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                              ),
+                              borderRadius: BorderRadius.circular(100)),
+                        ),
+                        Container(
+                          width: 100,
+                          height: 100,
+                          margin: EdgeInsets.only(
+                              right: MediaQuery.of(context).size.width / 2.4),
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.pink.shade700,
+                                  Colors.orange.shade500
+                                ],
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                              ),
+                              borderRadius: BorderRadius.circular(100)),
+                        ),
+                      ],
+                    ),
+                    ListView.builder(
+                      itemCount: productListProv.getAllProducts.length,
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Container(
+                          child: ProductTile(
+                            productName: productListProv
+                                .getAllProducts[index].productName,
+                            productImage: productListProv
+                                .getAllProducts[index].productImage,
+                            date: productListProv.getAllProducts[index].date,
+                            productDescription: productListProv
+                                .getAllProducts[index].productDescription,
+                            acccountStatus: productListProv
+                                .getAllProducts[index].accountStatus,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
