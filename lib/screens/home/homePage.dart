@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
