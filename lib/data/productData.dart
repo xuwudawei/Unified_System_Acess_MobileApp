@@ -6,7 +6,7 @@ List<ProductModel> GetAllProducts() {
 
   //1
   productModel = new ProductModel();
-  productModel.productName = "Bank OF XUWUDAWEI";
+  productModel.productName = "Bank of David";
   productModel.productImage = "assets/images/app_logo.jpeg";
   productModel.date = "09/20";
   productModel.accountStatus = "active";
@@ -15,7 +15,7 @@ List<ProductModel> GetAllProducts() {
 
   //2
   productModel = new ProductModel();
-  productModel.productName = "Bank OF XUWUDAWEI";
+  productModel.productName = "Bank of America";
   productModel.productImage = "assets/images/app_logo.jpeg";
   productModel.date = "09/20";
   productModel.accountStatus = "blocked";
@@ -24,7 +24,7 @@ List<ProductModel> GetAllProducts() {
 
   //3
   productModel = new ProductModel();
-  productModel.productName = "Bank OF XUWUDAWEI";
+  productModel.productName = "Bank of Ivory Coast";
   productModel.productImage = "assets/images/app_logo.jpeg";
   productModel.date = "09/20";
   productModel.accountStatus = "suspended";
@@ -33,7 +33,7 @@ List<ProductModel> GetAllProducts() {
 
   //4
   productModel = new ProductModel();
-  productModel.productName = "Bank OF XUWUDAWEI";
+  productModel.productName = "Bank of Ghana";
   productModel.productImage = "assets/images/app_logo.jpeg";
   productModel.date = "09/20";
   productModel.accountStatus = "active";
@@ -42,7 +42,7 @@ List<ProductModel> GetAllProducts() {
 
   //5
   productModel = new ProductModel();
-  productModel.productName = "Bank OF XUWUDAWEI";
+  productModel.productName = "Bank of Nigeria";
   productModel.productImage = "assets/images/app_logo.jpeg";
   productModel.date = "09/20";
   productModel.accountStatus = "suspended";

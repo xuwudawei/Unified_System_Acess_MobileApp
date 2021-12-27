@@ -43,7 +43,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         Provider.of<ProductListProvider>(context, listen: false);
     List<ProductModel> products = await GetAllProducts();
     productListData.setProductList(products);
-    print(products);
+    // print(products);
   }
 
   @override
@@ -83,6 +83,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   text: "Home",
                   textColor: Colors.white,
                   iconColor: Colors.white,
+                  backgroundGradient: LinearGradient(
+                    colors: [Colors.pink.shade700, Colors.orange.shade500],
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                  ),
                 ),
                 GButton(
                   icon: LineIcons.user,
@@ -90,13 +95,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   text: 'Profile',
                   iconColor: Colors.white,
                   textColor: Colors.white,
+                  backgroundGradient: LinearGradient(
+                    colors: [Colors.pink.shade700, Colors.orange.shade500],
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                  ),
                 ),
               ],
               selectedIndex: selectedNav,
               onTabChange: (value) {
                 setState(() {
                   botNav.setIndex(value);
-                  print(value);
+                  // print(value);
                 });
               },
             ),

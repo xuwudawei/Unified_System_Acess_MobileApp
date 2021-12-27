@@ -20,13 +20,13 @@ class ProductTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Color? _detectAccountColor() {
       if (acccountStatus == 'active') {
-        return Colors.green.withOpacity(0.6);
+        return Colors.green;
       } else if (acccountStatus == 'suspended') {
-        return Colors.orange.withOpacity(0.6);
+        return Colors.orange;
       } else if (acccountStatus == 'blocked') {
-        return Colors.red.withOpacity(0.6);
+        return Colors.red;
       } else {
-        return Colors.blue.withOpacity(0.6);
+        return Colors.blue;
       }
     }
 
@@ -44,7 +44,7 @@ class ProductTile extends StatelessWidget {
 
     return Center(
       child: Container(
-        padding: EdgeInsets.only(bottom: 20),
+        padding: EdgeInsets.only(bottom: 15),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Container(
@@ -61,7 +61,7 @@ class ProductTile extends StatelessWidget {
                   // ),
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.25,
+                  height: MediaQuery.of(context).size.height * 0.22,
                   width: MediaQuery.of(context).size.width / 1.07,
                   decoration: BoxDecoration(
                       boxShadow: [
