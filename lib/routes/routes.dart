@@ -29,7 +29,7 @@ class RouteGenerator {
       //change below to back to LandingPage
       case '/landingPage':
         return MaterialPageRoute(
-          builder: (_) => MainPage(),
+          builder: (_) => LandingPage(),
         );
       case '/landingPage/VerifyNumber':
         return MaterialPageRoute(
