@@ -70,7 +70,7 @@ packages:
       name: camera_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   camera_web:
     dependency: transitive
     description:
@@ -470,7 +470,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.1"
+    version: "5.0.0"
   quiver:
     dependency: transitive
     description:
