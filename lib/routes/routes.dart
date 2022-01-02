@@ -5,6 +5,7 @@ import 'package:usa_app/screens/AccountRegistrationPages/personalInfoPage.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/recordVideoPage.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/register_account.dart';
 import 'package:usa_app/screens/AccountRegistrationPages/videoInstructionsPage.dart';
+import 'package:usa_app/screens/face_gesture_capturing_pages/camera_screen_page.dart';
 import 'package:usa_app/screens/home/main.dart';
 import 'package:usa_app/screens/initialScreens/landing_page.dart';
 import 'package:usa_app/screens/initialScreens/loading_screens.dart';
@@ -26,10 +27,10 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => LoadingScreen(),
         );
-      //change below to back to LandingPage
+      //change below to back to Landing Page, I have temporarily changed it to camera_screen_page
       case '/landingPage':
         return MaterialPageRoute(
-          builder: (_) => LandingPage(),
+          builder: (_) => CameraScreenPage(),
         );
       case '/landingPage/VerifyNumber':
         return MaterialPageRoute(
@@ -54,6 +55,10 @@ class RouteGenerator {
       case '/Country/DocumentScanning/PersonalInfo/VideoRecordingInstructions':
         return MaterialPageRoute(
           builder: (_) => VideoInstructionsPage(),
+        );
+      case '/cameraScreenPage':
+        return MaterialPageRoute(
+          builder: (_) => CameraScreenPage(),
         );
       case '/home/Main':
         return MaterialPageRoute(

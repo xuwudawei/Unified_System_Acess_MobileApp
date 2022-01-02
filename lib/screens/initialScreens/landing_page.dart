@@ -122,7 +122,7 @@ class _LandingPageState extends State<LandingPage> {
                         vertical: 20, horizontal: 20),
                     child: SlideAction(
                       text: "Swipe to proceed > > >",
-                      textStyle: TextStyle(fontSize: 20, color: Colors.white
+                      textStyle: TextStyle(fontSize: 17, color: Colors.white
                           //  HexColor('#68451d'),
                           ),
                       //sliderButtonIconPadding: 8,

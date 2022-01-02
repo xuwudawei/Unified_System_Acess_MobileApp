@@ -61,7 +61,7 @@ class ProductTile extends StatelessWidget {
                   // ),
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.22,
+                  height: MediaQuery.of(context).size.height * 0.24,
                   width: MediaQuery.of(context).size.width / 1.07,
                   decoration: BoxDecoration(
                       boxShadow: [

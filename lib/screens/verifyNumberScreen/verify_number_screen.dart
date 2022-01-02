@@ -105,7 +105,7 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
                   child: SlideAction(
                     text: " Swipe to receive OTP >>>",
                     textStyle: TextStyle(
-                      fontSize: 19,
+                      fontSize: 17,
                       color: Colors.white,
                     ),
                     //sliderButtonIconPadding: 8,

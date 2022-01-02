@@ -55,6 +55,10 @@ dependencies:
   video_player: ^2.2.10
   line_icons: ^2.0.0
   google_nav_bar: ^5.0.5
+  camera: ^0.9.4+5
+  image: ^3.1.0
+  
+  
   
   
   

@@ -59,6 +59,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _createSearchView() {
     return new Container(
+      padding: EdgeInsets.only(left: 10, right: 10),
       //decoration: BoxDecoration(border: Border.all(width: 1.0)),
       child: new TextField(
         controller: _searchview,

@@ -6,10 +6,12 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class OTPVerificationPage extends StatefulWidget {
+  final bool? otpVerified;
   final bool? numberExist;
   final String? myNumber;
   const OTPVerificationPage({
     Key? key,
+    @required this.otpVerified,
     @required this.numberExist,
     @required this.myNumber,
   }) : super(key: key);
@@ -355,7 +357,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
                         ? "Swipe to sign in"
                         : "Register an account",
                     textStyle: TextStyle(
-                      fontSize: 19,
+                      fontSize: 17,
                       color: Colors.white,
                     ),
                     //sliderButtonIconPadding: 8,
@@ -366,17 +368,36 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
                     //animationDuration: Duration(seconds: 1),
                     reversed: false,
                     onSubmit: () {
-                      widget.numberExist!
-                          ? Future.delayed(
-                              Duration(seconds: 1),
-                              () => Navigator.pushNamedAndRemoveUntil(
-                                  context, '/signIn', (route) => false),
-                            )
-                          : Future.delayed(
-                              Duration(seconds: 1),
-                              () => Navigator.pushNamedAndRemoveUntil(context,
-                                  '/RegisterAccount', (route) => false),
-                            );
+                      if (currentText.length != 6 || currentText != "123456") {
+                        errorController!.add(ErrorAnimationType
+                            .shake); // Triggering error shake animation
+                        setState(() => hasError = true);
+                        Future.delayed(
+                          Duration(seconds: 2),
+                          () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OTPVerificationPage(
+                                      numberExist: widget.numberExist,
+                                      myNumber: widget.myNumber))
+                              // '/VerifyNumber/OTP',
+                              // (route) => false,
+                              // arguments: numberExist,
+                              ),
+                        );
+                      } else {
+                        widget.numberExist!
+                            ? Future.delayed(
+                                Duration(seconds: 1),
+                                () => Navigator.pushNamedAndRemoveUntil(
+                                    context, '/signIn', (route) => false),
+                              )
+                            : Future.delayed(
+                                Duration(seconds: 1),
+                                () => Navigator.pushNamedAndRemoveUntil(context,
+                                    '/RegisterAccount', (route) => false),
+                              );
+                      }
                     },
                   ),
                 ),

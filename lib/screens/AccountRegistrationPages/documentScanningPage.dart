@@ -26,8 +26,8 @@ class _DocumentScanningPageState extends State<DocumentScanningPage> {
     if (_selectedFile != null) {
       return Image.file(
         _selectedFile!,
-        width: 250,
-        height: 250,
+        width: MediaQuery.of(context).size.width / 1.1,
+        height: MediaQuery.of(context).size.width / 1.5,
         fit: BoxFit.cover,
       );
     } else {
@@ -194,13 +194,15 @@ class _DocumentScanningPageState extends State<DocumentScanningPage> {
                     },
                   ),
                 ),
-                SizedBox(
-                  height: 40,
+
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.width / 10,
+                    bottom: MediaQuery.of(context).size.width / 10,
+                  ),
+                  child: getImageWidget(),
                 ),
-                getImageWidget(),
-                SizedBox(
-                  height: 20,
-                ),
+
                 MaterialButton(
                   color: Colors.green,
                   child: Text(

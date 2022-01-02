@@ -20,12 +20,16 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
   String? apartment;
   String? zipCode;
   String? streetAddress;
+  bool isZipValid(var zip) =>
+      RegExp(r"^[a-z0-9][a-z0-9\- ]{0,10}[a-z0-9]$", caseSensitive: false)
+          .hasMatch(zip);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+
         centerTitle: false,
 
         // leading: GestureDetector(
@@ -40,6 +44,7 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
           ),
         ],
       ),
+      resizeToAvoidBottomInset: true,
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -87,6 +92,9 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
                     ),
                     isDense: true,
                     border: OutlineInputBorder(),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.red),
+                    ),
                     labelText: 'Zip code',
                     labelStyle: TextStyle(color: Colors.grey),
                     hintText: 'Zip Code',
