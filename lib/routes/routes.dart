@@ -27,7 +27,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => LoadingScreen(),
         );
-      //change below to back to Landing Page, I have temporarily changed it to camera_screen_page
+      //change below to back to Landing Page, I have temporarily changed it to camera_screen_page for convenience
       case '/landingPage':
         return MaterialPageRoute(
           builder: (_) => CameraScreenPage(),
