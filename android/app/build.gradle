@@ -37,9 +37,7 @@ android {
         jvmTarget = '1.8'
     }
 
-    defaultConfig {
-        minSdkVersion 21
-    }
+   
 
 
     sourceSets {
@@ -49,7 +47,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.usa_app"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
