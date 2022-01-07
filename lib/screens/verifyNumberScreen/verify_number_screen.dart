@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -34,8 +36,8 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
     RegExp regExp = new RegExp(pattern);
     if (value.length == 0) {
       return 'Please enter your mobile number';
-    } else if (!regExp.hasMatch(value)) {
-      print(regExp.hasMatch(value));
+    } else if (!regExp.hasMatch(value) || value.length < 10) {
+      // print(regExp.hasMatch(value));
       return 'Invalid mobile number, Try again!';
     } else {
       return '';
@@ -77,8 +79,10 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
                   height: 120,
                   padding: EdgeInsets.all(5),
                   child: IntlPhoneField(
+                    keyboardType: TextInputType.phone,
                     countryCodeTextColor: Colors.white,
-                    initialValue: 'xxxxxxxxx',
+                    initialValue: '',
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     style: TextStyle(fontSize: 20, color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Phone Number',
@@ -103,7 +107,7 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                   child: SlideAction(
-                    text: " Swipe to receive OTP >>>",
+                    text: " Swipe to receive OTP >>",
                     textStyle: TextStyle(
                       fontSize: 17,
                       color: Colors.white,
@@ -155,28 +159,22 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
                               "This is a new number. Proceed to register an account!",
                             );
                           });
-                          Future.delayed(
-                            Duration(seconds: 2),
-                            () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => OTPVerificationPage(
-                                        numberExist: numberExist,
-                                        myNumber: myNumber))
-                                // '/VerifyNumber/OTP',
-                                // (route) => false,
-                                // arguments: numberExist,
-                                ),
-                          );
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OTPVerificationPage(
+                                      numberExist: numberExist,
+                                      myNumber: myNumber))
+                              // '/VerifyNumber/OTP',
+                              // (route) => false,
+                              // arguments: numberExist,
+                              );
                         } else {
                           setState(() {
                             snackBar(validateMobile(myNumber));
                           });
-                          Future.delayed(
-                            Duration(seconds: 1),
-                            () => Navigator.pushNamedAndRemoveUntil(context,
-                                '/landingPage/VerifyNumber', (route) => false),
-                          );
+                          Navigator.pushNamedAndRemoveUntil(context,
+                              '/landingPage/VerifyNumber', (route) => false);
                         }
                       }
                     },
