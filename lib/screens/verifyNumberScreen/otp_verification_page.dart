@@ -30,6 +30,29 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
   bool hasError = false;
   String currentText = "";
   final formKey = GlobalKey<FormState>();
+  bool timeReached = true;
+  final int timerMaxSeconds = 30;
+  int currentSeconds = 0;
+  final interval = const Duration(seconds: 1);
+
+  String get timerText =>
+      '${((timerMaxSeconds - currentSeconds) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
+
+  startTimeout([int? milliseconds]) {
+    var duration = interval;
+    Timer.periodic(duration, (timer) {
+      setState(() {
+        // print(timer.tick);
+        currentSeconds = timer.tick;
+        if (timer.tick >= timerMaxSeconds) {
+          timer.cancel();
+          setState(() {
+            timeReached = true;
+          });
+        }
+      });
+    });
+  }
 
   AnimationController? _animationController;
 
@@ -72,13 +95,6 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
     });
   }
 
-  @override
-  void dispose() {
-    errorController!.close();
-
-    super.dispose();
-  }
-
   // snackBar Widget
   snackBar(String? message) {
     return ScaffoldMessenger.of(context).showSnackBar(
@@ -91,290 +107,318 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.width / 6,
-              ),
-              Container(
-                padding: const EdgeInsets.all(20),
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                  child: Text(
-                    "Enter Verification Code\n sent to:\n\n " +
-                        widget.myNumber.toString(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pushReplacementNamed('/landingPage/VerifyNumber');
+        //we need to return a future
+        return Future.value(false);
+      },
+      child: Scaffold(
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.width / 6,
                 ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Form(
-                key: formKey,
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 30),
-                    child: PinCodeTextField(
-                      appContext: context,
-                      pastedTextStyle: TextStyle(
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: Text(
+                      "Enter Verification Code\n sent to:\n\n " +
+                          widget.myNumber.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w400,
                       ),
-                      length: 6,
-                      obscureText: true,
-                      obscuringCharacter: '*',
-                      // obscuringWidget: FlutterLogo(
-                      //   size: 24,
-                      // ),
-                      blinkWhenObscuring: true,
-                      animationType: AnimationType.fade,
-                      validator: (v) {
-                        if (v!.length < 3) {
-                          return "I'm from validator";
-                        } else {
-                          return null;
-                        }
-                      },
-                      pinTheme: PinTheme(
-                        shape: PinCodeFieldShape.box,
-                        borderRadius: BorderRadius.circular(5),
-                        fieldHeight: 50,
-                        fieldWidth: 40,
-                        activeFillColor: Colors.white,
-                      ),
-                      cursorColor: Colors.black,
-                      animationDuration: Duration(milliseconds: 300),
-                      enableActiveFill: true,
-                      errorAnimationController: errorController,
-                      controller: textEditingController,
-                      keyboardType: TextInputType.number,
-                      boxShadows: [
-                        BoxShadow(
-                          offset: Offset(0, 1),
-                          color: Colors.black12,
-                          blurRadius: 10,
-                        )
-                      ],
-                      onCompleted: (v) {
-                        print("Completed");
-                      },
-                      // onTap: () {
-                      //   print("Pressed");
-                      // },
-                      onChanged: (value) {
-                        print(value);
-                        setState(() {
-                          currentText = value;
-                        });
-                      },
-                      beforeTextPaste: (text) {
-                        print("Allowing to paste $text");
-                        //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                        //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                        return true;
-                      },
-                    )),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Text(
-                  hasError ? "*Please fill up all the cells properly" : "",
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Didn't receive the code? ",
-                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
                   ),
-                  TextButton(
-                      onPressed: () => snackBar("OTP Sent!"),
-                      child: Text(
-                        "RESEND",
-                        style: TextStyle(
-                            color: Colors.blueAccent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
-                      ))
-                ],
-              ),
-              // Container(
-              //   margin:
-              //       const EdgeInsets.symmetric(vertical: 30.0, horizontal: 100),
-              //   child: ButtonTheme(
-              //     height: 50,
-              //     child: TextButton(
-              //       onPressed: () {
-              //         formKey.currentState!.validate();
-              //         // conditions for validating
-              //         if (currentText.length != 6 || currentText != "123456") {
-              //           errorController!.add(ErrorAnimationType
-              //               .shake); // Triggering error shake animation
-              //           setState(() => hasError = true);
-              //         } else {
-              //           setState(
-              //             () {
-              //               hasError = false;
-              //               snackBar("Number Verified! Swipe to Proceed!");
-              //             },
-              //           );
-              //         }
-              //       },
-              //       child: Center(
-              //           child: Text(
-              //         "VERIFY".toUpperCase(),
-              //         style: TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 18,
-              //             fontWeight: FontWeight.bold),
-              //       )),
-              //     ),
-              //   ),
-              //   decoration: BoxDecoration(
-              //     color: Colors.green,
-              //     borderRadius: BorderRadius.circular(5),
-              //   ),
-              // ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 60),
-                child: GestureDetector(
-                  onTap: () {
-                    formKey.currentState!.validate();
-                    // conditions for validating
-                    if (currentText.length != 6 || currentText != "123456") {
-                      errorController!.add(ErrorAnimationType
-                          .shake); // Triggering error shake animation
-                      setState(() => hasError = true);
-                    } else {
-                      setState(
-                        () {
-                          hasError = false;
-                          _animationController!.forward();
-                          snackBar("Number Verified! Swipe to Proceed!");
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                Form(
+                  key: formKey,
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 30),
+                      child: PinCodeTextField(
+                        appContext: context,
+                        pastedTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        length: 6,
+                        obscureText: true,
+                        useHapticFeedback: true,
+                        hapticFeedbackTypes: HapticFeedbackTypes.vibrate,
+                        obscuringCharacter: '•',
+                        // obscuringWidget: FlutterLogo(
+                        //   size: 24,
+                        // ),
+                        blinkWhenObscuring: true,
+                        animationType: AnimationType.fade,
+                        validator: (v) {
+                          if (v!.length < 3) {
+                            return "I'm from AI validator";
+                          } else {
+                            return null;
+                          }
                         },
-                      );
-                    }
-                  },
-                  child: AnimatedContainer(
-                    decoration: BoxDecoration(
-                      color: _color,
-                      borderRadius: BorderRadius.circular(100.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: _color,
-                          blurRadius: 21,
-                          spreadRadius: -15,
-                          offset: Offset(
-                            0.0,
-                            20.0,
-                          ),
-                        )
-                      ],
-                    ),
-                    padding: EdgeInsets.only(
-                        left: _containerPaddingLeft!,
-                        right: 20.0,
-                        top: 10.0,
-                        bottom: 10.0),
-                    duration: Duration(milliseconds: 400),
-                    curve: Curves.easeOutCubic,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        (!sent)
-                            ? AnimatedContainer(
-                                duration: Duration(milliseconds: 400),
-                                child: Icon(Icons.send),
-                                curve: Curves.fastOutSlowIn,
-                                transform: Matrix4.translationValues(
-                                    _translateX!, _translateY!, 0)
-                                  ..rotateZ(_rotate!)
-                                  ..scale(_scale),
-                              )
-                            : Container(),
-                        AnimatedSize(
-                          vsync: this,
-                          duration: Duration(milliseconds: 600),
-                          child: show ? SizedBox(width: 10.0) : Container(),
+                        pinTheme: PinTheme(
+                          shape: PinCodeFieldShape.box,
+                          borderRadius: BorderRadius.circular(5),
+                          fieldHeight: 50,
+                          fieldWidth: 40,
+                          activeFillColor: Colors.white,
                         ),
-                        AnimatedSize(
-                          vsync: this,
-                          duration: Duration(milliseconds: 200),
-                          child: show ? Text("Verify") : Container(),
-                        ),
-                        AnimatedSize(
-                          vsync: this,
-                          duration: Duration(milliseconds: 200),
-                          child: sent ? Icon(Icons.done) : Container(),
-                        ),
-                        AnimatedSize(
-                          vsync: this,
-                          alignment: Alignment.topLeft,
-                          duration: Duration(milliseconds: 600),
-                          child: sent ? SizedBox(width: 10.0) : Container(),
-                        ),
-                        AnimatedSize(
-                          vsync: this,
-                          duration: Duration(milliseconds: 200),
-                          child: sent ? Text("Done") : Container(),
-                        ),
-                      ],
-                    ),
+                        cursorColor: Colors.black,
+                        animationDuration: Duration(milliseconds: 300),
+                        enableActiveFill: true,
+                        errorAnimationController: errorController,
+                        controller: textEditingController,
+                        keyboardType: TextInputType.number,
+                        boxShadows: [
+                          BoxShadow(
+                            offset: Offset(0, 1),
+                            color: Colors.black12,
+                            blurRadius: 10,
+                          )
+                        ],
+                        onCompleted: (v) {
+                          print("Completed");
+                        },
+                        // onTap: () {
+                        //   print("Pressed");
+                        // },
+                        onChanged: (value) {
+                          print(value);
+                          setState(() {
+                            currentText = value;
+                          });
+                        },
+                        beforeTextPaste: (text) {
+                          print("Allowing to paste $text");
+                          //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                          //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                          return true;
+                        },
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Text(
+                    hasError ? "*Please fill up all the cells properly" : "",
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height / 5,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                  child: SlideAction(
-                    text: widget.numberExist!
-                        ? "Swipe to sign in"
-                        : "Register an account",
-                    textStyle: TextStyle(
-                      fontSize: 17,
-                      color: Colors.white,
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Didn't receive the code? ",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
-                    //sliderButtonIconPadding: 8,
-                    key: _key,
-                    height: 85,
-                    outerColor: HexColor("#083473"),
-                    sliderButtonIconSize: 38,
-                    //animationDuration: Duration(seconds: 1),
-                    reversed: false,
-                    onSubmit: () {
+                    timeReached
+                        ? TextButton(
+                            onPressed: () {
+                              setState(() {
+                                timeReached = false;
+                                startTimeout();
+                                snackBar("OTP sent successfully");
+                              });
+                            },
+                            child: Text(
+                              "RESEND",
+                              style: TextStyle(
+                                color: Colors.blueAccent,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          )
+                        : Text(
+                            timerText,
+                            style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                            ),
+                          ),
+                  ],
+                ),
+                // Container(
+                //   margin:
+                //       const EdgeInsets.symmetric(vertical: 30.0, horizontal: 100),
+                //   child: ButtonTheme(
+                //     height: 50,
+                //     child: TextButton(
+                //       onPressed: () {
+                //         formKey.currentState!.validate();
+                //         // conditions for validating
+                //         if (currentText.length != 6 || currentText != "123456") {
+                //           errorController!.add(ErrorAnimationType
+                //               .shake); // Triggering error shake animation
+                //           setState(() => hasError = true);
+                //         } else {
+                //           setState(
+                //             () {
+                //               hasError = false;
+                //               snackBar("Number Verified! Swipe to Proceed!");
+                //             },
+                //           );
+                //         }
+                //       },
+                //       child: Center(
+                //           child: Text(
+                //         "VERIFY".toUpperCase(),
+                //         style: TextStyle(
+                //             color: Colors.white,
+                //             fontSize: 18,
+                //             fontWeight: FontWeight.bold),
+                //       )),
+                //     ),
+                //   ),
+                //   decoration: BoxDecoration(
+                //     color: Colors.green,
+                //     borderRadius: BorderRadius.circular(5),
+                //   ),
+                // ),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 30.0, bottom: 60),
+                  child: GestureDetector(
+                    onTap: () {
+                      formKey.currentState!.validate();
+                      // conditions for validating
                       if (currentText.length != 6 || currentText != "123456") {
                         errorController!.add(ErrorAnimationType
                             .shake); // Triggering error shake animation
-                        setState(() => hasError = true);
-                        Future.delayed(
-                          Duration(seconds: 2),
-                          () => Navigator.push(
+
+                        setState(() => {
+                              hasError = true,
+                            });
+                        textEditingController.clear();
+                      } else {
+                        setState(
+                          () {
+                            hasError = false;
+                            _animationController!.forward();
+                            snackBar("Number Verified! Swipe to Proceed!");
+                          },
+                        );
+                      }
+                    },
+                    child: AnimatedContainer(
+                      decoration: BoxDecoration(
+                        color: _color,
+                        borderRadius: BorderRadius.circular(100.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: _color,
+                            blurRadius: 21,
+                            spreadRadius: -15,
+                            offset: Offset(
+                              0.0,
+                              20.0,
+                            ),
+                          )
+                        ],
+                      ),
+                      padding: EdgeInsets.only(
+                          left: _containerPaddingLeft!,
+                          right: 20.0,
+                          top: 10.0,
+                          bottom: 10.0),
+                      duration: Duration(milliseconds: 400),
+                      curve: Curves.easeOutCubic,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          (!sent)
+                              ? AnimatedContainer(
+                                  duration: Duration(milliseconds: 400),
+                                  child: Icon(Icons.send),
+                                  curve: Curves.fastOutSlowIn,
+                                  transform: Matrix4.translationValues(
+                                      _translateX!, _translateY!, 0)
+                                    ..rotateZ(_rotate!)
+                                    ..scale(_scale),
+                                )
+                              : Container(),
+                          AnimatedSize(
+                            vsync: this,
+                            duration: Duration(milliseconds: 600),
+                            child: show ? SizedBox(width: 10.0) : Container(),
+                          ),
+                          AnimatedSize(
+                            vsync: this,
+                            duration: Duration(milliseconds: 200),
+                            child: show ? Text("Verify") : Container(),
+                          ),
+                          AnimatedSize(
+                            vsync: this,
+                            duration: Duration(milliseconds: 200),
+                            child: sent ? Icon(Icons.done) : Container(),
+                          ),
+                          AnimatedSize(
+                            vsync: this,
+                            alignment: Alignment.topLeft,
+                            duration: Duration(milliseconds: 600),
+                            child: sent ? SizedBox(width: 10.0) : Container(),
+                          ),
+                          AnimatedSize(
+                            vsync: this,
+                            duration: Duration(milliseconds: 200),
+                            child: sent ? Text("Done") : Container(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height / 5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 30),
+                    child: SlideAction(
+                      text: widget.numberExist!
+                          ? "Swipe to sign in"
+                          : "Register an account",
+                      textStyle: TextStyle(
+                        fontSize: 17,
+                        color: Colors.white,
+                      ),
+                      //sliderButtonIconPadding: 8,
+                      key: _key,
+                      height: 85,
+                      outerColor: HexColor("#083473"),
+                      sliderButtonIconSize: 38,
+                      //animationDuration: Duration(seconds: 1),
+                      reversed: false,
+                      onSubmit: () {
+                        if (currentText.length != 6 ||
+                            currentText != "123456") {
+                          errorController!.add(ErrorAnimationType
+                              .shake); // Triggering error shake animation
+                          setState(() => hasError = true);
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OTPVerificationPage(
@@ -383,29 +427,31 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
                               // '/VerifyNumber/OTP',
                               // (route) => false,
                               // arguments: numberExist,
-                              ),
-                        );
-                      } else {
-                        widget.numberExist!
-                            ? Future.delayed(
-                                Duration(seconds: 1),
-                                () => Navigator.pushNamedAndRemoveUntil(
-                                    context, '/signIn', (route) => false),
-                              )
-                            : Future.delayed(
-                                Duration(seconds: 1),
-                                () => Navigator.pushNamedAndRemoveUntil(context,
-                                    '/RegisterAccount', (route) => false),
                               );
-                      }
-                    },
+                        } else {
+                          widget.numberExist!
+                              ? Navigator.pushNamedAndRemoveUntil(
+                                  context, '/home/Main', (route) => false)
+                              : Navigator.pushNamedAndRemoveUntil(context,
+                                  '/RegisterAccount', ((route) => false));
+                        }
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    errorController!.close();
+    errorController = null;
+    _animationController!.dispose();
+    super.dispose();
   }
 }
