@@ -15,7 +15,7 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
-    Timer(
+    Future.delayed(
       Duration(seconds: 3),
       () => Navigator.of(context).popAndPushNamed("/landingPage"),
     );
