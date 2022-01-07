@@ -20,9 +20,17 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
   String? apartment;
   String? zipCode;
   String? streetAddress;
-  bool isZipValid(var zip) =>
-      RegExp(r"^[a-z0-9][a-z0-9\- ]{0,10}[a-z0-9]$", caseSensitive: false)
-          .hasMatch(zip);
+  bool? completedEachField;
+  bool isZipValid(var zip) {
+    if (RegExp(r"^[a-z0-9][a-z0-9\- ]{0,10}[a-z0-9]$", caseSensitive: false)
+        .hasMatch(zip)) {
+      completedEachField = true;
+      return true;
+    } else {
+      completedEachField = false;
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +46,33 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
         // ),
         actions: [
           IconButton(
-            onPressed: () =>
-                Navigator.pushNamed(context, '/Country/DocumentScanning'),
+            onPressed: () {
+              if (completedEachField == true &&
+                  countryValue != null &&
+                  streetAddress != null &&
+                  apartment != null &&
+                  zipCode != null) {
+                Navigator.pushNamed(context, '/Country/DocumentScanning');
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('You left some fields empty!'),
+                      content: Text('Please complete all fields'),
+                      actions: [
+                        FlatButton(
+                          child: Text('Ok'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
             icon: Icon(Icons.arrow_forward_ios),
           ),
         ],
@@ -84,23 +117,30 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
                     });
                   },
                 ),
-                TextField(
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   style: TextStyle(color: Colors.white, fontSize: 23),
                   decoration: InputDecoration(
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: const BorderSide(color: Colors.grey),
                     ),
                     isDense: true,
                     border: OutlineInputBorder(),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.red),
-                    ),
                     labelText: 'Zip code',
                     labelStyle: TextStyle(color: Colors.grey),
                     hintText: 'Zip Code',
                     suffixText: 'Required',
                     hintStyle: TextStyle(color: Colors.white),
                   ),
+                  validator: (zipcode) =>
+                      isZipValid(zipcode) ? null : 'Invalid Zip Code',
                   onChanged: (value) {
                     zipCode = value;
                   },
@@ -108,7 +148,18 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
                 SizedBox(
                   height: 20,
                 ),
-                TextField(
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value == "") {
+                      completedEachField = false;
+                      return 'Please enter your street address';
+                    } else {
+                      completedEachField = true;
+                      return null;
+                    }
+                  },
                   style: TextStyle(color: Colors.white, fontSize: 23),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -129,7 +180,18 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
                 SizedBox(
                   height: 20,
                 ),
-                TextField(
+                TextFormField(
+                  textInputAction: TextInputAction.done,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value == "") {
+                      completedEachField = false;
+                      return 'Please enter your apartment/Suite details';
+                    } else {
+                      completedEachField = true;
+                      return null;
+                    }
+                  },
                   style: TextStyle(color: Colors.white, fontSize: 23),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
