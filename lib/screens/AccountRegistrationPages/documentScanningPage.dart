@@ -136,9 +136,10 @@ class _DocumentScanningPageState extends State<DocumentScanningPage> {
                   width: MediaQuery.of(context).size.width,
                   child: Text(
                     "Upload Government Issued ID",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 28,
+                      fontSize: MediaQuery.of(context).size.width / 17,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
