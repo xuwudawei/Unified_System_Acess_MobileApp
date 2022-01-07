@@ -134,13 +134,8 @@ class _LandingPageState extends State<LandingPage> {
                       sliderButtonIconSize: 38,
                       //animationDuration: Duration(seconds: 1),
                       reversed: false,
-                      onSubmit: () {
-                        Future.delayed(
-                          Duration(seconds: 1),
-                          () => Navigator.pushNamedAndRemoveUntil(context,
-                              '/landingPage/VerifyNumber', (route) => false),
-                        );
-                      },
+                      onSubmit: () => Navigator.pushNamedAndRemoveUntil(context,
+                          '/landingPage/VerifyNumber', (route) => false),
                     ),
                   ),
                 ),
