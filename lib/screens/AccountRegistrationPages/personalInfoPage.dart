@@ -19,8 +19,9 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   String? email;
   String? validEmail;
   String? dateOfBirth;
-  String? nationality;
+
   String? gender;
+  bool? completedEachField;
   final formKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
   TextEditingController _datePicked = TextEditingController();
@@ -44,6 +45,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         selectedDate = picked;
         _datePicked.text =
             DateFormat('dd-MM-yyyy').format(selectedDate).toString();
+        dateOfBirth = _datePicked.text;
       });
   }
 
@@ -57,11 +59,40 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           child: Icon(Icons.arrow_back_ios_new),
         ),
         actions: [
-          GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed(
-                '/Country/DocumentScanning/PersonalInfo/VideoRecordingInstructions'),
-            child: Icon(Icons.arrow_forward_ios),
-          ),
+          IconButton(
+            onPressed: () {
+              if (completedEachField == true &&
+                  firstName != null &&
+                  lastName != null &&
+                  email != null &&
+                  gender != null &&
+                  dateOfBirth != null) {
+                Navigator.of(context).pushNamed(
+                    '/Country/DocumentScanning/PersonalInfo/faceCapturingInstructions');
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('You left some fields empty!'),
+                      content: Text('Please complete all fields'),
+                      actions: [
+                        FlatButton(
+                          child: Text('Ok'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+            icon: Icon(
+              Icons.arrow_forward_ios,
+            ),
+          )
         ],
       ),
       body: GestureDetector(
@@ -85,7 +116,18 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                     ),
                   ),
                 ),
-                TextField(
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  textInputAction: TextInputAction.next,
+                  validator: (value) {
+                    if (value == "") {
+                      completedEachField = false;
+                      return 'Please enter your first name';
+                    } else {
+                      completedEachField = true;
+                      return null;
+                    }
+                  },
                   style: TextStyle(color: Colors.white, fontSize: 23),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -106,7 +148,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 SizedBox(
                   height: 10,
                 ),
-                TextField(
+                TextFormField(
+                  textInputAction: TextInputAction.next,
                   style: TextStyle(color: Colors.white, fontSize: 23),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -127,7 +170,18 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 SizedBox(
                   height: 10,
                 ),
-                TextField(
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  textInputAction: TextInputAction.next,
+                  validator: (value) {
+                    if (value == "") {
+                      completedEachField = false;
+                      return 'Please enter your last name';
+                    } else {
+                      completedEachField = true;
+                      return null;
+                    }
+                  },
                   style: TextStyle(color: Colors.white, fontSize: 23),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -149,6 +203,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                   height: 10,
                 ),
                 TextFormField(
+                  textInputAction: TextInputAction.next,
                   autovalidateMode: AutovalidateMode.always,
                   style: TextStyle(color: Colors.white, fontSize: 23),
                   decoration: InputDecoration(
@@ -173,6 +228,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                   onChanged: (emails) {
                     if (vd.EmailValidator.validate(emails)) {
                       setState(() {
+                        email = emails;
                         validEmail = null;
                       });
                     } else {
@@ -181,14 +237,21 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                       });
                     }
                   },
-                  onSaved: (emails) {
-                    this.email = emails;
-                  },
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                TextField(
+                TextFormField(
+                  readOnly: true,
+                  validator: (value) {
+                    if (value == "") {
+                      completedEachField = false;
+                      return 'Please select your date of birth';
+                    } else {
+                      completedEachField = true;
+                      return null;
+                    }
+                  },
                   controller: _datePicked,
                   style: TextStyle(color: Colors.white, fontSize: 23),
                   decoration: InputDecoration(
@@ -235,6 +298,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                     setState(
                       () {
                         dropdownvalue = newChoice.toString();
+                        gender = dropdownvalue;
                       },
                     );
                   },
