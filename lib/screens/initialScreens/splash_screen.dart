@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:usa_app/colors.dart';
 
@@ -15,7 +13,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Timer(
+    Future.delayed(
       Duration(seconds: 3),
       () => Navigator.of(context).popAndPushNamed("/loading"),
     );
