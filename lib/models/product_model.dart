@@ -1,14 +1,12 @@
 class ProductModel {
-  String? productName;
-  String? productDescription;
-  String? productImage;
-  String? date;
-  String? accountStatus;
+  String? sessionId;
+  String? appName;
+  DateTime? date;
+  int? accountStatus;
 
   ProductModel({
-    this.productName,
-    this.productDescription,
-    this.productImage,
+    this.sessionId,
+    this.appName,
     this.date,
     this.accountStatus,
   });
