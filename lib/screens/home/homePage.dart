@@ -10,31 +10,41 @@ import 'package:usa_app/providers/productListProvider.dart';
 import 'package:usa_app/screens/home/homePageProductTile.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key, required}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    // controller = new TabController(length: 4, vsync: this.);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final productListProv =
+        Provider.of<ProductListProvider>(context, listen: false);
+    List<ProductModel> allProducts = productListProv.getAllProducts();
+    _nebulae = [];
+    for (var a in allProducts) {
+      _nebulae!.add(a.appName!.toLowerCase());
+    }
+    // print(_nebulae);
+  }
+
   TextEditingController textController = TextEditingController();
   var _searchview = new TextEditingController();
-  List<ProductModel> allProducts = GetAllProducts();
+
   TabController? controller;
   bool _firstSearch = true;
   String _query = "";
 
   List<String>? _nebulae;
   List<String>? _filterList;
-  @override
-  void initState() {
-    super.initState();
-    //controller = new TabController(length: 4, vsync: this.);
-    _nebulae = [];
-    for (var a in allProducts) {
-      _nebulae!.add(a.productName!.toLowerCase());
-    }
-  }
 
   _HomePageState() {
     //Register a closure to be called when the object changes.
@@ -61,7 +71,8 @@ class _HomePageState extends State<HomePage> {
     return new Container(
       padding: EdgeInsets.only(left: 10, right: 10),
       //decoration: BoxDecoration(border: Border.all(width: 1.0)),
-      child: new TextField(
+      child: new TextFormField(
+        autofocus: false,
         controller: _searchview,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.search),
@@ -78,17 +89,81 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _createListView() {
+    final productListProv = Provider.of<ProductListProvider>(context);
+    List<ProductModel> allProducts = productListProv.getAllProducts();
     return new Flexible(
       child: new ListView.builder(
           itemCount: _nebulae!.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: ProductTile(
-                productName: allProducts[index].productName,
-                productImage: allProducts[index].productImage,
-                date: allProducts[index].date,
-                productDescription: allProducts[index].productDescription,
-                acccountStatus: allProducts[index].accountStatus,
+            return Center(
+              child: Container(
+                padding: EdgeInsets.only(bottom: 15),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    child: Stack(
+                      children: [
+                        BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaX: 7,
+                            sigmaY: 7,
+                          ),
+                        ),
+                        Container(
+                          child: ProductTile(
+                            appName: allProducts[index].appName,
+                            sessionId: allProducts[index].sessionId,
+                            date: allProducts[index].date,
+                            acccountStatus: allProducts[index].accountStatus,
+                          ),
+                        ),
+                        Positioned(
+                          top: 20.0,
+                          right: 10.0,
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Unsubscribe'),
+                                    content: Text(
+                                        'Are you sure you want to unsubscribe?'),
+                                    actions: [
+                                      FlatButton(
+                                        child: Text('Unsubscribe'),
+                                        onPressed: () {
+                                          productListProv
+                                              .setProductAccountStatusInactive(
+                                                  index);
+                                          setState(() {
+                                            allProducts.removeAt(index);
+                                          });
+                                          print("removed");
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             );
           }),
@@ -96,6 +171,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _performSearch() {
+    final productListProv = Provider.of<ProductListProvider>(context);
+    List<ProductModel> allProducts = productListProv.getAllProducts();
     _filterList = [];
 
     for (int i = 0; i < _nebulae!.length; i++) {
@@ -105,15 +182,20 @@ class _HomePageState extends State<HomePage> {
         _filterList!.add(item);
       }
     }
+    // print(_filterList);
 
-    return _createFilteredListView();
+    return _createFilteredListView(allProducts);
   }
 
-  Widget _createFilteredListView() {
+  Widget _createFilteredListView(List<ProductModel> allProducts) {
+    final productListProv = Provider.of<ProductListProvider>(context);
+    List<ProductModel> allProducts = productListProv.getAllProducts();
+
     List<ProductModel> finalList = [];
+
     for (var b in _filterList!) {
       allProducts.forEach((w) {
-        if (w.productName!.toLowerCase().contains(b)) {
+        if (w.appName!.toLowerCase().contains(b)) {
           finalList.add(w);
           // print(w);
 
@@ -121,19 +203,81 @@ class _HomePageState extends State<HomePage> {
         }
       });
     }
-    // print(finalList);
+    // print(finalList[0].appName);
 
     return new Flexible(
       child: new ListView.builder(
           itemCount: finalList.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: ProductTile(
-                productName: finalList[index].productName,
-                productImage: finalList[index].productImage,
-                date: finalList[index].date,
-                productDescription: finalList[index].productDescription,
-                acccountStatus: finalList[index].accountStatus,
+            return Center(
+              child: Container(
+                padding: EdgeInsets.only(bottom: 15),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    child: Stack(
+                      children: [
+                        BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaX: 7,
+                            sigmaY: 7,
+                          ),
+                        ),
+                        Container(
+                          child: ProductTile(
+                            appName: finalList[index].appName,
+                            sessionId: finalList[index].sessionId,
+                            date: finalList[index].date,
+                            acccountStatus: finalList[index].accountStatus,
+                          ),
+                        ),
+                        Positioned(
+                          top: 20.0,
+                          right: 10.0,
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Unsubscribe'),
+                                    content: Text(
+                                        'Are you sure you want to unsubscribe?'),
+                                    actions: [
+                                      FlatButton(
+                                        child: Text('Unsubscribe'),
+                                        onPressed: () {
+                                          productListProv
+                                              .setProductAccountStatusInactive(
+                                                  index);
+                                          setState(() {
+                                            finalList.removeAt(index);
+                                          });
+                                          print("removed");
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             );
           }),
@@ -142,7 +286,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final productListProv = Provider.of<ProductListProvider>(context);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -150,27 +293,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          actions: [
-            // AnimSearchBar(()
-            //   width: MediaQuery.of(context).size.width * 0.95,
-            //   textController: textController,
-            //   helpText: "Search anything",
-            //   color: HexColor("#fe8a71"),
-            //   style: TextStyle(
-            //     color: Colors.black,
-            //     fontSize: 20,
-            //   ),
-            //   closeSearchOnSuffixTap: true,
-            //   onSuffixTap: () {
-            //     setState(() {
-            //       // FocusScope.of(context).unfocus();
-
-            //       print(textController.text);
-            //       textController.clear();
-            //     });
-            //   },
-            // ),
-          ],
+          actions: [],
         ),
         body: GestureDetector(
           onTap: () {
@@ -208,129 +331,6 @@ class _HomePageState extends State<HomePage> {
                     height: 10,
                   ),
                   _firstSearch ? _createListView() : _performSearch(),
-                  // Container(
-                  //   child: Expanded(
-                  //     child: ListView.builder(
-                  //       itemCount: productListProv.getAllProducts.length,
-                  //       shrinkWrap: true,
-                  //       physics: const AlwaysScrollableScrollPhysics(),
-                  //       itemBuilder: (context, index) {
-                  //         return Container(
-                  //           child: ProductTile(
-                  //             productName:
-                  //                 productListProv.getAllProducts[index].productName,
-                  //             productImage: productListProv
-                  //                 .getAllProducts[index].productImage,
-                  //             date: productListProv.getAllProducts[index].date,
-                  //             productDescription: productListProv
-                  //                 .getAllProducts[index].productDescription,
-                  //             acccountStatus: productListProv
-                  //                 .getAllProducts[index].accountStatus,
-                  //           ),
-                  //         );
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
-
-                  //I have removed the background circular design for the sake of simplicity
-
-                  // Container(
-                  //   child: Expanded(
-                  //     child: Stack(
-                  //       children: [
-                  //         Column(
-                  //           children: [
-                  //             Container(
-                  //               width: 200,
-                  //               height: 200,
-                  //               margin: EdgeInsets.only(
-                  //                   left: MediaQuery.of(context).size.width / 2.4),
-                  //               decoration: BoxDecoration(
-                  //                   gradient: LinearGradient(
-                  //                     colors: [
-                  //                       Colors.pink.shade700,
-                  //                       Colors.orange.shade500
-                  //                     ],
-                  //                     begin: Alignment.topRight,
-                  //                     end: Alignment.bottomLeft,
-                  //                   ),
-                  //                   borderRadius: BorderRadius.circular(100)),
-                  //             ),
-                  //             Container(
-                  //               width: 100,
-                  //               height: 100,
-                  //               margin: EdgeInsets.only(
-                  //                   right: MediaQuery.of(context).size.width / 2.4),
-                  //               decoration: BoxDecoration(
-                  //                   gradient: LinearGradient(
-                  //                     colors: [
-                  //                       Colors.pink.shade700,
-                  //                       Colors.orange.shade500
-                  //                     ],
-                  //                     begin: Alignment.topRight,
-                  //                     end: Alignment.bottomLeft,
-                  //                   ),
-                  //                   borderRadius: BorderRadius.circular(100)),
-                  //             ),
-                  //             Container(
-                  //               width: 200,
-                  //               height: 200,
-                  //               margin: EdgeInsets.only(
-                  //                   left: MediaQuery.of(context).size.width / 2.4),
-                  //               decoration: BoxDecoration(
-                  //                   gradient: LinearGradient(
-                  //                     colors: [
-                  //                       Colors.pink.shade700,
-                  //                       Colors.orange.shade500
-                  //                     ],
-                  //                     begin: Alignment.topRight,
-                  //                     end: Alignment.bottomLeft,
-                  //                   ),
-                  //                   borderRadius: BorderRadius.circular(100)),
-                  //             ),
-                  //             Container(
-                  //               width: 100,
-                  //               height: 100,
-                  //               margin: EdgeInsets.only(
-                  //                   right: MediaQuery.of(context).size.width / 2.4),
-                  //               decoration: BoxDecoration(
-                  //                   gradient: LinearGradient(
-                  //                     colors: [
-                  //                       Colors.pink.shade700,
-                  //                       Colors.orange.shade500
-                  //                     ],
-                  //                     begin: Alignment.topRight,
-                  //                     end: Alignment.bottomLeft,
-                  //                   ),
-                  //                   borderRadius: BorderRadius.circular(100)),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         // ListView.builder(
-                  //         //   itemCount: productListProv.getAllProducts.length,
-                  //         //   shrinkWrap: true,
-                  //         //   physics: const AlwaysScrollableScrollPhysics(),
-                  //         //   itemBuilder: (context, index) {
-                  //         //     return Container(
-                  //         //       child: ProductTile(
-                  //         //         productName: productListProv
-                  //         //             .getAllProducts[index].productName,
-                  //         //         productImage: productListProv
-                  //         //             .getAllProducts[index].productImage,
-                  //         //         date: productListProv.getAllProducts[index].date,
-                  //         //         productDescription: productListProv
-                  //         //             .getAllProducts[index].productDescription,
-                  //         //         acccountStatus: productListProv
-                  //         //             .getAllProducts[index].accountStatus,
-                  //         //       ),
-                  //         //     );
-                  //         //   },
-                  //         // ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
