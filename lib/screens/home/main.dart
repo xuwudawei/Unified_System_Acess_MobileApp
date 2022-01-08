@@ -27,6 +27,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   var selectedNav = 0;
+  List<ProductModel> productList = [];
   List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     ProfilePage(),
@@ -43,7 +44,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         Provider.of<ProductListProvider>(context, listen: false);
     List<ProductModel> products = await GetAllProducts();
     productListData.setProductList(products);
-    // print(products);
+
+    // print(productListData.getAllProducts());
   }
 
   @override
