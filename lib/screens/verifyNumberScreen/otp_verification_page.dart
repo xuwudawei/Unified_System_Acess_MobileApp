@@ -9,11 +9,13 @@ class OTPVerificationPage extends StatefulWidget {
   final bool? otpVerified;
   final bool? numberExist;
   final String? myNumber;
+  final String? email;
   const OTPVerificationPage({
     Key? key,
     @required this.otpVerified,
     @required this.numberExist,
     @required this.myNumber,
+    @required this.email,
   }) : super(key: key);
 
   @override
@@ -24,12 +26,17 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
     with TickerProviderStateMixin {
   final GlobalKey<SlideActionState> _key = GlobalKey();
 
-  TextEditingController textEditingController = TextEditingController();
-  StreamController<ErrorAnimationType>? errorController;
+  TextEditingController textEditingController1 = TextEditingController();
+  TextEditingController textEditingController2 = TextEditingController();
+  StreamController<ErrorAnimationType>? errorController1;
+  StreamController<ErrorAnimationType>? errorController2;
 
   bool hasError = false;
-  String currentText = "";
-  final formKey = GlobalKey<FormState>();
+  String phone_otp = "";
+  String email_otp = "";
+  final formKey1 = GlobalKey<FormState>();
+  final formKey2 = GlobalKey<FormState>();
+
   bool timeReached = true;
   final int timerMaxSeconds = 30;
   int currentSeconds = 0;
@@ -69,7 +76,8 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
 
   @override
   void initState() {
-    errorController = StreamController<ErrorAnimationType>();
+    errorController1 = StreamController<ErrorAnimationType>();
+    errorController2 = StreamController<ErrorAnimationType>();
     super.initState();
     _animationController = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1300));
@@ -130,21 +138,31 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
                   child: Center(
                     child: Text(
                       "Enter Verification Code\n sent to:\n\n " +
-                          widget.myNumber.toString(),
+                          widget.myNumber.toString() +
+                          "\n" +
+                          widget.email.toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 30,
+                        fontSize: 26,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: 50,
+                  height: 20,
+                ),
+                Text(
+                  "Phone OTP",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
                 Form(
-                  key: formKey,
+                  key: formKey1,
                   child: Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 30),
@@ -181,8 +199,8 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
                         cursorColor: Colors.black,
                         animationDuration: Duration(milliseconds: 300),
                         enableActiveFill: true,
-                        errorAnimationController: errorController,
-                        controller: textEditingController,
+                        errorAnimationController: errorController1,
+                        controller: textEditingController1,
                         keyboardType: TextInputType.number,
                         boxShadows: [
                           BoxShadow(
@@ -200,7 +218,86 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
                         onChanged: (value) {
                           print(value);
                           setState(() {
-                            currentText = value;
+                            phone_otp = value;
+                          });
+                        },
+                        beforeTextPaste: (text) {
+                          print("Allowing to paste $text");
+                          //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                          //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                          return true;
+                        },
+                      )),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Email OTP",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Form(
+                  key: formKey2,
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5.0, horizontal: 30),
+                      child: PinCodeTextField(
+                        appContext: context,
+                        pastedTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        length: 6,
+                        obscureText: true,
+                        useHapticFeedback: true,
+                        hapticFeedbackTypes: HapticFeedbackTypes.vibrate,
+                        obscuringCharacter: '•',
+                        // obscuringWidget: FlutterLogo(
+                        //   size: 24,
+                        // ),
+                        blinkWhenObscuring: true,
+                        animationType: AnimationType.fade,
+                        validator: (v) {
+                          if (v!.length < 3) {
+                            return "I'm from AI validator";
+                          } else {
+                            return null;
+                          }
+                        },
+                        pinTheme: PinTheme(
+                          shape: PinCodeFieldShape.box,
+                          borderRadius: BorderRadius.circular(5),
+                          fieldHeight: 50,
+                          fieldWidth: 40,
+                          activeFillColor: Colors.white,
+                        ),
+                        cursorColor: Colors.black,
+                        animationDuration: Duration(milliseconds: 300),
+                        enableActiveFill: true,
+                        errorAnimationController: errorController2,
+                        controller: textEditingController2,
+                        keyboardType: TextInputType.number,
+                        boxShadows: [
+                          BoxShadow(
+                            offset: Offset(0, 1),
+                            color: Colors.black12,
+                            blurRadius: 10,
+                          )
+                        ],
+                        onCompleted: (v) {
+                          print("Completed");
+                        },
+                        // onTap: () {
+                        //   print("Pressed");
+                        // },
+                        onChanged: (value) {
+                          print(value);
+                          setState(() {
+                            email_otp = value;
                           });
                         },
                         beforeTextPaste: (text) {
@@ -221,9 +318,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
                         fontWeight: FontWeight.w400),
                   ),
                 ),
-                SizedBox(
-                  height: 30,
-                ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -298,25 +393,36 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
                 // ),
 
                 Padding(
-                  padding: const EdgeInsets.only(top: 30.0, bottom: 60),
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 20),
                   child: GestureDetector(
                     onTap: () {
-                      formKey.currentState!.validate();
+                      formKey1.currentState!.validate();
+                      formKey2.currentState!.validate();
                       // conditions for validating
-                      if (currentText.length != 6 || currentText != "123456") {
-                        errorController!.add(ErrorAnimationType
+                      if (phone_otp.length != 6 || phone_otp != "123456") {
+                        errorController1!.add(ErrorAnimationType
                             .shake); // Triggering error shake animation
 
                         setState(() => {
                               hasError = true,
                             });
-                        textEditingController.clear();
+                        textEditingController1.clear();
+                      }
+                      if (email_otp.length != 6 || email_otp != "123456") {
+                        errorController2!.add(ErrorAnimationType
+                            .shake); // Triggering error shake animation
+
+                        setState(() => {
+                              hasError = true,
+                            });
+                        textEditingController2.clear();
                       } else {
                         setState(
                           () {
                             hasError = false;
                             _animationController!.forward();
-                            snackBar("Number Verified! Swipe to Proceed!");
+                            snackBar(
+                                "Number and Email Verified! Swipe to Proceed!");
                           },
                         );
                       }
@@ -390,7 +496,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
                   ),
                 ),
                 SizedBox(
-                  height: 16,
+                  height: 8,
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height / 5,
@@ -413,21 +519,35 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
                       //animationDuration: Duration(seconds: 1),
                       reversed: false,
                       onSubmit: () {
-                        if (currentText.length != 6 ||
-                            currentText != "123456") {
-                          errorController!.add(ErrorAnimationType
+                        if (phone_otp.length != 6 || phone_otp != "123456") {
+                          errorController1!.add(ErrorAnimationType
                               .shake); // Triggering error shake animation
                           setState(() => hasError = true);
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OTPVerificationPage(
-                                      numberExist: widget.numberExist,
-                                      myNumber: widget.myNumber))
-                              // '/VerifyNumber/OTP',
-                              // (route) => false,
-                              // arguments: numberExist,
-                              );
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OTPVerificationPage(
+                                numberExist: widget.numberExist,
+                                myNumber: widget.myNumber,
+                                email: widget.email,
+                              ),
+                            ),
+                          );
+                        } else if (email_otp.length != 6 ||
+                            email_otp != "123456") {
+                          errorController2!.add(ErrorAnimationType
+                              .shake); // Triggering error shake animation
+                          setState(() => hasError = true);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OTPVerificationPage(
+                                numberExist: widget.numberExist,
+                                myNumber: widget.myNumber,
+                                email: widget.email,
+                              ),
+                            ),
+                          );
                         } else {
                           widget.numberExist!
                               ? Navigator.pushNamedAndRemoveUntil(
@@ -449,8 +569,10 @@ class _OTPVerificationPageState extends State<OTPVerificationPage>
 
   @override
   void dispose() {
-    errorController!.close();
-    errorController = null;
+    errorController1!.close();
+    errorController2!.close();
+    errorController1 = null;
+    errorController2 = null;
     _animationController!.dispose();
     super.dispose();
   }
