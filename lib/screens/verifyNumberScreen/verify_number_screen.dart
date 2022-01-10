@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:email_validator/email_validator.dart' as vd;
 import 'package:slide_to_act/slide_to_act.dart';
 import 'package:usa_app/screens/verifyNumberScreen/otp_verification_page.dart';
 
@@ -17,6 +18,8 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
   var myNumber = "";
   var numberList = ["+2251234567890", "+2331234567890"];
   bool numberExist = false;
+  String email = '';
+  String? validEmail;
 
   final GlobalKey<SlideActionState> _key = GlobalKey();
 
@@ -39,6 +42,8 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
     } else if (!regExp.hasMatch(value) || value.length < 10) {
       // print(regExp.hasMatch(value));
       return 'Invalid mobile number, Try again!';
+    } else if (!vd.EmailValidator.validate(email)) {
+      return 'Please enter a valid email';
     } else {
       return '';
     }
@@ -55,14 +60,14 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.width / 3,
+                height: MediaQuery.of(context).size.width / 4,
               ),
               Container(
                 padding: const EdgeInsets.all(20),
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(
-                    "Verify Your Phone Number",
+                    "Verify Your Email and Phone Number",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -72,8 +77,59 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.width / 2.6),
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height / 10,
+                  left: 20,
+                  right: 20,
+                  // bottom: MediaQuery.of(context).size.width / 20,
+                ),
+                child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.always,
+                  style: TextStyle(color: Colors.white, fontSize: 23),
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                    isDense: true,
+                    border: OutlineInputBorder(),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
+                    labelText: 'Email',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    hintText: 'Email',
+                    suffixText: 'Required',
+                    hintStyle: TextStyle(color: Colors.white),
+                  ),
+                  validator: (emails) => validEmail,
+                  onChanged: (emails) {
+                    if (vd.EmailValidator.validate(emails)) {
+                      setState(() {
+                        email = emails;
+                        validEmail = null;
+                      });
+                    } else {
+                      setState(() {
+                        validEmail = 'Please enter a valid email';
+                      });
+                    }
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height / 150,
+                  bottom: MediaQuery.of(context).size.width / 2,
+                  left: 20,
+                  right: 20,
+                ),
                 child: Container(
                   // color: Colors.white,
                   height: 120,
@@ -164,7 +220,8 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
                               MaterialPageRoute(
                                   builder: (context) => OTPVerificationPage(
                                       numberExist: numberExist,
-                                      myNumber: myNumber))
+                                      myNumber: myNumber,
+                                      email: email))
                               // '/VerifyNumber/OTP',
                               // (route) => false,
                               // arguments: numberExist,
