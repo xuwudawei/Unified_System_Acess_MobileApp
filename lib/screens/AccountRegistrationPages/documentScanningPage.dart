@@ -5,7 +5,7 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 
-enum GovernmentIssueID { Passport, National_ID, Birth_Certificate }
+enum GovernmentIssueID { Passport, National_ID, Driving_License }
 
 class DocumentScanningPage extends StatefulWidget {
   const DocumentScanningPage({Key? key}) : super(key: key);
@@ -180,13 +180,13 @@ class _DocumentScanningPageState extends State<DocumentScanningPage> {
                 ),
                 ListTile(
                   title: const Text(
-                    'Birth Certificate',
+                    'Driving License',
                     style: TextStyle(color: Colors.white, fontSize: 23),
                   ),
                   leading: Radio(
                     activeColor: Colors.blueAccent,
                     fillColor: MaterialStateProperty.resolveWith(getColor),
-                    value: GovernmentIssueID.Birth_Certificate,
+                    value: GovernmentIssueID.Driving_License,
                     groupValue: _selectedIDType,
                     onChanged: (GovernmentIssueID? value) {
                       setState(() {
