@@ -16,8 +16,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   String? firstName;
   String? middleName;
   String? lastName;
-  String? email;
-  String? validEmail;
+  String? documentIDNumber;
   String? dateOfBirth;
 
   String? gender;
@@ -64,7 +63,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
               if (completedEachField == true &&
                   firstName != null &&
                   lastName != null &&
-                  email != null &&
+                  documentIDNumber != null &&
                   gender != null &&
                   dateOfBirth != null) {
                 Navigator.of(context).pushNamed(
@@ -204,7 +203,16 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 ),
                 TextFormField(
                   textInputAction: TextInputAction.next,
-                  autovalidateMode: AutovalidateMode.always,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value == "") {
+                      completedEachField = false;
+                      return 'Please enter your document ID number';
+                    } else {
+                      completedEachField = true;
+                      return null;
+                    }
+                  },
                   style: TextStyle(color: Colors.white, fontSize: 23),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -218,24 +226,14 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                     errorBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.red),
                     ),
-                    labelText: 'Email',
+                    labelText: 'Document ID Number',
                     labelStyle: TextStyle(color: Colors.grey),
-                    hintText: 'Email',
+                    hintText: 'Document ID Number',
                     suffixText: 'Required',
                     hintStyle: TextStyle(color: Colors.white),
                   ),
-                  validator: (emails) => validEmail,
-                  onChanged: (emails) {
-                    if (vd.EmailValidator.validate(emails)) {
-                      setState(() {
-                        email = emails;
-                        validEmail = null;
-                      });
-                    } else {
-                      setState(() {
-                        validEmail = 'Please enter a valid email';
-                      });
-                    }
+                  onChanged: (value) {
+                    documentIDNumber = value;
                   },
                 ),
                 SizedBox(
